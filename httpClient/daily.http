@@ -1,0 +1,57 @@
+### Create task
+POST http://localhost:4000/v1/daily/task
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "daily",
+  "content": "content",
+  "isDaily": true
+}
+
+
+### Update task
+PUT http://localhost:4000/v1/daily/task
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": 32151826727964672,
+  "content": "content"
+}
+### Get Tasks
+GET  http://localhost:4000/v1/daily/task
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Delete Tasks
+DELETE  http://localhost:4000/v1/daily/task/32150208565481472
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### Register
+POST http://localhost:4000/v1/auth/register
+Content-Type: application/json
+
+{
+  "username": "vkhangstack",
+  "password": "khangdev",
+  "firstName": "Khang",
+  "lastName": "Pham"
+}
+
+### Login
+POST http://localhost:4000/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "vkhangstack",
+  "password": "khangdev"
+}
+
+
+### Ger profile
+GET http://localhost:4000/v1/users/profile/me
+Content-Type: application/json
+Authorization: Bearer {{token}}

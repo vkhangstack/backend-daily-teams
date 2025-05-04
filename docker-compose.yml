@@ -1,0 +1,92 @@
+services:
+  database:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"   # Use max 50% of a single CPU core
+          memory: "512M" # Limit memory to 512MB
+        reservations:
+          cpus: "0.25"   # Reserve at least 25% of a CPU core
+          memory: "256M" # Reserve at least 256MB
+    container_name: dlt_database
+    image: postgres:15.3
+#    restart: always
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-q",
+          "-d",
+          "postgres",
+          "-U",
+          "root"
+        ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - APP_DB_USER=${DB_USER}
+      - APP_DB_PASS=${DB_PASSWORD}
+      - APP_DB_NAME=${DB_NAME}
+    volumes:
+#      - ./pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+  cache:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"   # Use max 50% of a single CPU core
+          memory: "512M" # Limit memory to 512MB
+        reservations:
+          cpus: "0.25"   # Reserve at least 25% of a CPU core
+          memory: "128M" # Reserve at least 256MB
+    container_name: dlt_cache
+    image: redis:6.2-alpine
+#    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${CACHE_PASS}
+    volumes:
+      - ./redis:/data
+  app:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"   # Use max 50% of a single CPU core
+          memory: "512M" # Limit memory to 512MB
+        reservations:
+          cpus: "0.25"   # Reserve at least 25% of a CPU core
+          memory: "128M" # Reserve at least 256MB
+    container_name: dlt_app
+    build: .
+    ports:
+      - "8080"
+    volumes:
+      - ./.env.production:/app/.env
+    depends_on:
+      - database
+  proxy:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"   # Use max 50% of a single CPU core
+          memory: "128M" # Limit memory to 512MB
+        reservations:
+          cpus: "0.15"   # Reserve at least 25% of a CPU core
+          memory: "64M" # Reserve at least 256MB
+    image: haproxy:latest
+    container_name: dlt_proxy
+    ports:
+      - "8080:80"  # Expose HAProxy on port 80
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
