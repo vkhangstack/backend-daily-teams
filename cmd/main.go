@@ -66,11 +66,11 @@ func InitRoutes() {
 	v1 := router.Group("/v1")
 
 	userGroup := v1.Group("/users")
-	userGroup.Use(middlewares.AuthMiddleware())
+	userGroup.Use(middlewares.AuthMiddleware(*userService))
 
 	userHandler := handler.NewUserHandler(*userService)
 
-	userGroup.Use(middlewares.AuthMiddleware())
+	userGroup.Use(middlewares.AuthMiddleware(*userService))
 	userGroup.GET("/profile/me", userHandler.ProfileMe)
 
 	authGroup := v1.Group("/auth")
@@ -79,7 +79,7 @@ func InitRoutes() {
 	authGroup.GET("/access", userHandler.GetAccessToken)
 
 	dailyGroup := v1.Group("/daily")
-	dailyGroup.Use(middlewares.AuthMiddleware())
+	dailyGroup.Use(middlewares.AuthMiddleware(*userService))
 
 	dailyHandler := handler.NewDailyHandler(*dailyService)
 

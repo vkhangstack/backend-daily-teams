@@ -7,10 +7,11 @@ import (
 	"github.com/vkhangstack/dlt/internal/adapters/repository"
 	"github.com/vkhangstack/dlt/internal/adapters/utils"
 	"github.com/vkhangstack/dlt/internal/core/domain/enum"
+	"github.com/vkhangstack/dlt/internal/core/services"
 	"strings"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(userService services.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
@@ -43,6 +44,15 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 		if userID == "" {
 			handler.HandleError(c, enum.Unauthorized, errors.New("token is required"))
+			c.Abort()
+			return
+		}
+
+		userId64, err := utils.TransformStringToUInt64(userID)
+
+		_, err = userService.ProfileMe(userId64)
+		if err != nil {
+			handler.HandleError(c, enum.Unauthorized, err)
 			c.Abort()
 			return
 		}
