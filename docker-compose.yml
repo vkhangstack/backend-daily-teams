@@ -35,7 +35,7 @@ services:
 #      - ./pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
   cache:
     deploy:
       resources:
