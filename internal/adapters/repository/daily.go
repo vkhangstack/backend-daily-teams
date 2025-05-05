@@ -17,7 +17,15 @@ func (u *DB) CreateTask(dto *dto.CreateDailyDto, userId uint64) (*model.DailyTas
 	task.Title = dto.Title
 	task.Content = dto.Content
 	task.IsDaily = dto.IsDaily
+	task.Start = dto.Start
+	task.End = dto.End
 
+	if dto.BackgroundColor != "" {
+		task.BackgroundColor = dto.BackgroundColor
+	}
+	if dto.TextColor != "" {
+		task.TextColor = dto.TextColor
+	}
 	if task.IsDaily == true {
 		// send teams
 	}

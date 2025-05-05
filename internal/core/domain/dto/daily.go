@@ -1,9 +1,13 @@
 package dto
 
 type CreateDailyDto struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	IsDaily bool   `json:"isDaily"`
+	Title           string `json:"title"`
+	Content         string `json:"content"`
+	Start           string `json:"start"`
+	End             string `json:"end"`
+	TextColor       string `json:"textColor,omitempty"`
+	BackgroundColor string `json:"backgroundColor,omitempty"`
+	IsDaily         bool   `json:"isDaily"`
 }
 
 type UpdateDailyDto struct {

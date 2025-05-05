@@ -45,12 +45,16 @@ func (h *DailyHandler) CreateTask(ctx *gin.Context) {
 		return
 	}
 	data := map[string]interface{}{
-		"id":        task.ID,
-		"title":     task.Title,
-		"content":   task.Content,
-		"createdAt": task.CreatedAt,
-		"updatedAt": task.UpdatedAt,
-		"userId":    task.UserId,
+		"id":              task.ID,
+		"title":           task.Title,
+		"content":         task.Content,
+		"start":           task.Start,
+		"end":             task.End,
+		"textColor":       task.TextColor,
+		"backgroundColor": task.BackgroundColor,
+		"createdAt":       task.CreatedAt,
+		"updatedAt":       task.UpdatedAt,
+		"userId":          task.UserId,
 	}
 
 	HandleSuccess(ctx, data)
