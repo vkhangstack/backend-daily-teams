@@ -28,7 +28,8 @@ WORKDIR /app
 #RUN mkdir -p config
 
 # Copy the binary from the builder stage
-COPY --from=builder /app .
+COPY --from=builder /app/app .
+#COPY --from=builder /app/.env .env
 #COPY --from=builder /app/config/ config/
 
 # Ensure the binary is executable
@@ -41,4 +42,5 @@ EXPOSE 4000
 RUN ls -l /app/
 
 # Command to run the application
-CMD ["./app"]
+ENTRYPOINT ["./app"]
+#CMD ["./app"]
