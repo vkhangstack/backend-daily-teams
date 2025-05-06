@@ -19,6 +19,7 @@ func (u *DB) CreateTask(dto *dto.CreateDailyDto, userId uint64) (*model.DailyTas
 	task.IsDaily = dto.IsDaily
 	task.Start = dto.Start
 	task.End = dto.End
+	task.AllDay = dto.AllDay
 
 	if dto.BackgroundColor != "" {
 		task.BackgroundColor = dto.BackgroundColor

@@ -14,6 +14,7 @@ type DailyTask struct {
 	Published       *time.Time `json:"published" db:"published"`
 	UserId          uint64     `json:"userId" db:"user_id"`
 	IsDaily         bool       `json:"isDaily" db:"is_daily"`
+	AllDay          bool       `json:"allDay" db:"all_day"`
 	*SqlModel
 }
 

@@ -55,6 +55,7 @@ func (h *DailyHandler) CreateTask(ctx *gin.Context) {
 		"createdAt":       task.CreatedAt,
 		"updatedAt":       task.UpdatedAt,
 		"userId":          task.UserId,
+		"allDay":          task.AllDay,
 	}
 
 	HandleSuccess(ctx, data)
