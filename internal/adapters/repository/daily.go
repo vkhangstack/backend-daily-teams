@@ -79,7 +79,7 @@ func (u *DB) ListTasks(userId uint64) ([]*model.DailyTask, error) {
 	var tasks []*model.DailyTask
 
 	req := u.db.Find(&tasks, "user_id = ?", userId)
-	if req.RowsAffected == 0 {
+	if req.Error != nil {
 		return nil, fmt.Errorf("list daily task error: %w", req.Error)
 	}
 	return tasks, nil
