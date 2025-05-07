@@ -27,7 +27,7 @@ func (u *DB) CreateTask(dto *dto.CreateDailyDto, userId uint64) (*model.DailyTas
 	if dto.TextColor != "" {
 		task.TextColor = dto.TextColor
 	}
-	if task.IsDaily == true {
+	if task.IsDaily != nil {
 		// send teams
 	}
 
@@ -51,9 +51,26 @@ func (u *DB) UpdateTask(payload *dto.UpdateDailyDto, userId uint64) error {
 	if payload.Content != "" {
 		task.Content = payload.Content
 	}
-
 	if payload.Title != "" {
 		task.Title = payload.Title
+	}
+	if payload.BackgroundColor != "" {
+		task.BackgroundColor = payload.BackgroundColor
+	}
+	if payload.TextColor != "" {
+		task.TextColor = payload.TextColor
+	}
+	if payload.Start != "" {
+		task.Start = payload.Start
+	}
+	if payload.End != "" {
+		task.End = payload.End
+	}
+	if payload.AllDay != nil {
+		task.AllDay = payload.AllDay
+	}
+	if payload.IsDaily != nil {
+		task.IsDaily = payload.IsDaily
 	}
 
 	task.UpdatedAt = time.Now()

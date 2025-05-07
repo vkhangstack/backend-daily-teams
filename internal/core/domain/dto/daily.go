@@ -7,8 +7,8 @@ type CreateDailyDto struct {
 	End             string `json:"end"`
 	TextColor       string `json:"textColor,omitempty"`
 	BackgroundColor string `json:"backgroundColor,omitempty"`
-	IsDaily         bool   `json:"isDaily,omitempty"`
-	AllDay          bool   `json:"allDay" default:"false"`
+	IsDaily         *bool  `json:"isDaily,omitempty"`
+	AllDay          *bool  `json:"allDay" default:"false"`
 }
 
 type UpdateDailyDto struct {
@@ -19,6 +19,6 @@ type UpdateDailyDto struct {
 	End             string `json:"end,omitempty"`
 	TextColor       string `json:"textColor,omitempty"`
 	BackgroundColor string `json:"backgroundColor,omitempty"`
-	IsDaily         bool   `json:"isDaily,omitempty"`
-	AllDay          bool   `json:"allDay,omitempty"`
+	IsDaily         *bool  `json:"isDaily,omitempty"`
+	AllDay          *bool  `json:"allDay,omitempty"`
 }
