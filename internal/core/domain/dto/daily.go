@@ -12,7 +12,7 @@ type CreateDailyDto struct {
 }
 
 type UpdateDailyDto struct {
-	ID              uint64 `json:"id"`
+	ID              string `json:"id"`
 	Content         string `json:"content,omitempty"`
 	Title           string `json:"title,omitempty"`
 	Start           string `json:"start,omitempty"`

@@ -88,7 +88,7 @@ func (h *DailyHandler) UpdateTask(ctx *gin.Context) {
 		return
 	}
 
-	HandleSuccess(ctx, nil)
+	HandleSuccess(ctx, map[string]interface{}{})
 }
 
 func (h *DailyHandler) DeleteTask(ctx *gin.Context) {

@@ -42,7 +42,8 @@ func (u *DB) CreateTask(dto *dto.CreateDailyDto, userId uint64) (*model.DailyTas
 
 func (u *DB) UpdateTask(payload *dto.UpdateDailyDto, userId uint64) error {
 	task := &model.DailyTask{}
-	req := u.db.First(&task, "id = ? and user_id = ?", payload.ID, userId)
+	id64, _ := utils.TransformStringToUInt64(payload.ID)
+	req := u.db.First(&task, "id = ? and user_id = ?", id64, userId)
 	if req.RowsAffected == 0 {
 		return fmt.Errorf("task not found: %w", req.Error)
 	}
