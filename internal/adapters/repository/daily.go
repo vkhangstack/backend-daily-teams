@@ -1,10 +1,14 @@
 package repository
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/vkhangstack/dlt/internal/adapters/utils"
 	"github.com/vkhangstack/dlt/internal/core/domain/dto"
 	"github.com/vkhangstack/dlt/internal/core/domain/model"
+	"io/ioutil"
+	"net/http"
 	"time"
 )
 
@@ -27,8 +31,37 @@ func (u *DB) CreateTask(dto *dto.CreateDailyDto, userId uint64) (*model.DailyTas
 	if dto.TextColor != "" {
 		task.TextColor = dto.TextColor
 	}
-	if task.IsDaily != nil {
+	if task.IsDaily != nil && *task.IsDaily == true {
+		//POST https://graph.microsoft.com/v1.0/teams/{team-id}/channels/{channel-id}/messages
+		//Authorization	Bearer {code}. Required.
+		//Content-type	application/json. Required.
+		client := &http.Client{}
+
+		url := "https://graph.microsoft.com/v1.0/teams/teamId/channels/chanelId/messages"
+		var reqBody struct {
+			Body struct {
+				Content string `json:"content"`
+			} `json:"body"`
+		}
+		// Decode JSON into the anonymous struct
+		reqBody.Body.Content = dto.Content
+		// Marshal the struct to JSON
+		jsonBytes, _ := json.Marshal(reqBody)
+		req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
+
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Authorization", "Bearer "+*dto.Token)
 		// send teams
+
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer resp.Body.Close()
+
+		body, _ := ioutil.ReadAll(resp.Body)
+
+		fmt.Println(string(body))
 	}
 
 	req := u.db.Create(&task)
