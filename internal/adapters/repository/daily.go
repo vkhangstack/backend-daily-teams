@@ -75,7 +75,7 @@ func (u *DB) UpdateTask(payload *dto.UpdateDailyDto, userId uint64) error {
 
 	task.UpdatedAt = time.Now()
 
-	req = u.db.Model(&task).Where("id = ?", task.ID).Where("user_id = ?", userId).Select("title", "content", "updated_at").Updates(&task)
+	req = u.db.Model(&task).Where("id = ?", task.ID).Where("user_id = ?", userId).Updates(&task)
 	if req.RowsAffected == 0 {
 		return fmt.Errorf("update daily task error: %w", req.Error)
 	}
