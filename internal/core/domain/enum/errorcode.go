@@ -11,6 +11,7 @@ const (
 	UseAlreadyExits     ErrorCode = -104
 	UserWrongPassword   ErrorCode = -105
 	InternalServerError ErrorCode = -500
+	InvalidPassword     ErrorCode = -201
 )
 
 var StatusMap = map[ErrorCode]string{
@@ -18,6 +19,7 @@ var StatusMap = map[ErrorCode]string{
 	Unauthorized:        "unauthorized",
 	TokenNotFoundError:  "token not found",
 	InvalidEmail:        "invalid email",
+	InvalidPassword:     "invalid password",
 	UserNotFound:        "user not found",
 	InternalServerError: "server error unknown",
 	UserWrongPassword:   "wrong username or password",

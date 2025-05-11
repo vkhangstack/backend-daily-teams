@@ -141,3 +141,7 @@ func (u *UserService) Login(username, password string) (*dto.LoginResponse, erro
 		RefreshToken: refreshToken,
 	}, nil
 }
+
+func (u *UserService) UpdateUser(payload *model.UserUpdate, userId uint64) error {
+	return u.repo.UpdateUser(payload, userId)
+}

@@ -66,30 +66,68 @@ func (u *DB) ReadUsers() ([]*model.User, error) {
 	return users, nil
 }
 
-func (u *DB) UpdateUser(id, email, password string) error {
+func (u *DB) UpdatePassword(userId uint64, password string, currentPassword string) error {
 	user := &model.User{}
-	req := u.db.First(&user, "id = ? ", id)
+	req := u.db.First(&user, "id = ?", userId)
 	if req.RowsAffected == 0 {
-		return errors.New("user not found")
+		return errors.New(enum.StatusMap[enum.UserNotFound])
+	}
+	hashCurrentPassword, err := u.HashPassword(currentPassword)
+	if err != nil {
+		return err
+	}
+	if hashCurrentPassword != user.Password {
+		return errors.New(enum.StatusMap[enum.InvalidPassword])
 	}
 
-	//hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	//if err != nil {
-	//	return fmt.Errorf("password not hashed: %v", err)
+	newPassword, err := u.HashPassword(password)
+	if err != nil {
+		return err
+	}
+	user.Password = newPassword
+	req = u.db.Model(&user).Where("id = ?", userId).Update(user)
+	if req.RowsAffected == 0 {
+		return errors.New("unable to update user")
+	}
+	return nil
+}
+
+func (u *DB) UpdateUser(payload *model.UserUpdate, userId uint64) error {
+	user := &model.UserUpdate{}
+	req := u.db.First(&user, "id = ? ", userId)
+	if req.RowsAffected == 0 {
+		return errors.New(enum.StatusMap[enum.UserNotFound])
+	}
+
+	//if payload.Password != "" {
+	//	hashedPassword, err := u.HashPassword(payload.Password)
+	//	if err != nil {
+	//		return fmt.Errorf("password not hashed: %v", err)
+	//	}
+	//	user.Password = hashedPassword
+	//}
+	if payload.FirstName != "" {
+		user.FirstName = payload.FirstName
+	}
+	if payload.LastName != "" {
+		user.LastName = payload.LastName
+	}
+
+	//user = &model.UserUpdate{
+	//	Password:   string(hashedPassword),
+	//	FirstName:  "",
+	//	LastName:   "",
+	//	Phone:      "",
+	//	ProviderId: "",
+	//	AvatarURL:  "",
 	//}
 
-	// user = &domain.User{
-	// 	Email:    email,
-	// 	Password: string(hashedPassword),
-	// }
-
 	// Update the email and password fields of the user
-	user.Email = email
 	//user.Password = string(hashedPassword)
 
-	req = u.db.Model(&user).Where("id = ?", id).Update(user)
+	req = u.db.Model(&user).Where("id = ?", userId).Update(user)
 	if req.RowsAffected == 0 {
-		return errors.New("unable to update user :(")
+		return errors.New("unable to update user")
 	}
 
 	// delete user in the cache

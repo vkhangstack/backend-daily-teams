@@ -6,6 +6,7 @@ import (
 	"github.com/vkhangstack/dlt/internal/adapters/utils"
 	"github.com/vkhangstack/dlt/internal/core/domain/dto"
 	"github.com/vkhangstack/dlt/internal/core/domain/enum"
+	"github.com/vkhangstack/dlt/internal/core/domain/model"
 	"github.com/vkhangstack/dlt/internal/core/services"
 	"net/http"
 )
@@ -102,4 +103,32 @@ func (h *UserHandler) GetAccessToken(ctx *gin.Context) {
 		return
 	}
 	HandleSuccess(ctx, users)
+}
+
+func (h *UserHandler) UpdateUser(ctx *gin.Context) {
+	userId, err := utils.GetUserId(ctx)
+	if err != nil {
+		HandleError(ctx, enum.BadRequest, err)
+		return
+	}
+
+	userId64, err := utils.TransformStringToUInt64(userId)
+	if err != nil {
+		HandleError(ctx, enum.BadRequest, fmt.Errorf("malformed request data"))
+		return
+	}
+
+	var payload *model.UserUpdate
+	if err := ctx.ShouldBindJSON(&payload); err != nil {
+		HandleError(ctx, enum.BadRequest, err)
+		return
+	}
+
+	err = h.svc.UpdateUser(payload, userId64)
+
+	if err != nil {
+		HandleError(ctx, enum.InternalServerError, fmt.Errorf("update user failed"))
+		return
+	}
+	HandleSuccess(ctx, map[string]interface{}{})
 }

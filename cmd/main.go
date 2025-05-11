@@ -74,6 +74,7 @@ func InitRoutes() {
 
 	userGroup.Use(middlewares.AuthMiddleware(*userService))
 	userGroup.GET("/profile/me", userHandler.ProfileMe)
+	userGroup.PUT("/profile", userHandler.UpdateUser)
 
 	authGroup := v1.Group("/auth")
 	authGroup.POST("/register", userHandler.Register)

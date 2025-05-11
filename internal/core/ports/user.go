@@ -10,8 +10,8 @@ type UserService interface {
 	Login(username, password string) (*dto.LoginResponse, error)
 	ProfileMe(userId uint64) (*model.User, error)
 	GetAccessToken(token string) (string, error)
+	UpdateUser(payload *model.UserUpdate, userId uint64) error
 	//LoginWithTeams(payload *model.UserLoginSocial) (*model.User, error)
-	//UpdateProfileMe(payload *model.UserUpdate) error
 	//DeleteProfileMe(userId string) error
 }
 
@@ -22,4 +22,5 @@ type UserRepository interface {
 	ProfileMe(userId uint64) (*model.User, error)
 	HashPassword(password string) (string, error)
 	VerifyPassword(hash, password string) error
+	UpdateUser(payload *model.UserUpdate, userId uint64) error
 }
